@@ -777,8 +777,7 @@ backdrop-filter: blur(7px);
 <div id="hiddenDiv">
   <button class="close-btn" onclick="document.getElementById('hiddenDiv').style.display = 'none';">●</button>
   <button class="back" style="top:0; left: 50px; position: fixed; color:white;"   onclick="history.back()">←</button>
-<h3 style="text-align: center; color:white; top:0; position: fixed;" >Games</h3>
-
+<h3 style="text-align: center; color:white; top:0; position: fixed;  transform: translateX(-50%);  z-index: 1000;" >Games</h3>
 
  
 <iframe class="frame" src="test99.html"></iframe>
@@ -792,6 +791,15 @@ backdrop-filter: blur(7px);
       border-radius:0px 0px 20px 20px;
       left:0;
     }
+    .back {
+    background: none;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    font-size:20px;
+}
      #ChatDiv {
     display: none;
     margin-top: 20px;
