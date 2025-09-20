@@ -151,7 +151,7 @@ border: 1px solid rgb(34, 34, 34);
     overflow-x: hidden;
     overflow-y: auto;
 box-shadow: 2px #141414;
-      animation: popIn 0.5s ease-out forwards;
+      animation: popIn2 0.5s ease-out forwards;
 
   }
   #settingsDiv {
@@ -418,6 +418,16 @@ border: 1px solid rgba(255, 255, 255, 0.15);
       }
       100% {
         opacity: 80%;
+        transform: scale(1);
+      }
+    }
+     @keyframes popIn2 {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 100%;
         transform: scale(1);
       }
     }
