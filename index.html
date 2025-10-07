@@ -1,15 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title></title>
-</head>
-<body>
-  <!-- T9 is a learning site for students-->
-  <h1>Press the button to continue to T9</h1>
-  <button onclick="openT9()">continue</button>
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom Home</title>
         <script src="learning.js"></script>
 
+        <html>
+        <head>
+          <title>T9 OS</title>
+          <link rel="icon" type="image/x-icon" href="${faviconUrl}">
+        </head>
+        <body style="margin:0; padding:0; overflow:hidden;"></body>
+        </html>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-size: 2em;
+      font-weight: bold;
+    }
+
+    /* Center top button below header */
+    .top-button {
+      text-align: center;
+      margin: 30px 0 10px;
+    }
+
+    .top-button a button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .top-button a button:hover {
+      background-color: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 1000px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card h2 {
+      color: #2563eb;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      margin: 8px 0;
+      padding: 8px;
+      background: #eff6ff;
+      border-radius: 6px;
+      font-size: 0.95em;
+    }
+
+    .bottom {
+      margin: 30px 0 50px;
+      text-align: center;
+    }
+
+    .bottom button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .bottom button:hover {
+      background-color: #1d4ed8;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <header>📘 Classroom Dashboard</header>
+
+  <!-- Centered Top Button -->
+  <div class="top-button">
+    <a  onclick="openT9()">
+      <button>Go to T9 OS Class</button>
+    </a>
+  </div>
+
+  <main>
+    <div class="card">
+      <h2>Upcoming Quizzes</h2>
+      <ul>
+        <li>Math Quiz — Friday, Oct 10</li>
+        <li>History Pop Quiz — Oct 12</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Homework</h2>
+      <ul>
+        <li>Science Worksheet — Due Tomorrow</li>
+        <li>Reading Log — Due Friday</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Classwork</h2>
+      <ul>
+        <li>Finish Essay Outline</li>
+        <li>Group Project Slides</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Announcements</h2>
+      <ul>
+        <li>Parent-Teacher Meeting next week</li>
+        <li>No school Monday</li>
+      </ul>
+    </div>
+  </main>
+
+  <div class="bottom">
+    <button onclick="window.open('https://classroom.google.com', '_blank')">
+      Go to Google Classroom
+    </button>
+  </div>
 </body>
 </html>
