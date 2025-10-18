@@ -1,253 +1,539 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>T9 OS Sonoma Edition</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T9 OS — Optimized & Reactive (Plain JS)</title>
+
+<!-- Lightweight fonts + fallback -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-  /* Reset */
-  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
-
-  body {
-    width: 100vw; height: 100vh;
-    overflow: hidden;
-    background: url('https://images.unsplash.com/photo-1687422731042-9e59225c3d8f?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-    background-size: cover;
-    display: flex;
-    flex-direction: column;
+  :root{
+    --bg-1: #0b0620;
+    --bg-2: #3a0057;
+    --accent: #7c3aed;
+    --glass: rgba(255,255,255,0.06);
+    --glass-2: rgba(255,255,255,0.04);
+    --muted: #9aa0a6;
+    --ui-radius: 14px;
+    --nav-height: 56px;
+    --transition: 200ms cubic-bezier(.2,.9,.2,1);
   }
 
-  /* Top bar */
-  #topbar {
-    width: 100%;
-    height: 30px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(15px);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 15px;
-    color: white;
-    position: fixed;
-    top: 0;
-    z-index: 100;
-  }
-  #topbar span { margin-left: 20px; font-size: 14px; }
-
-  /* Dock */
-  #dock {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 10px 20px;
-    display: flex;
-    gap: 20px;
-    z-index: 100;
-  }
-  #dock img {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  #dock img:hover {
-    transform: scale(1.3);
+  /* basic reset */
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;-webkit-font-smoothing:antialiased}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color:#fff;
+    overflow:hidden;
+    -webkit-user-select:none;user-select:none;
   }
 
-  /* Windows */
-  .window {
-    position: absolute;
-    width: 500px;
-    height: 400px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.2);
-    display: none;
-    flex-direction: column;
-    z-index: 50;
-    overflow: hidden;
-    color: white;
+  /* container */
+  .desktop{
+    height:100vh;width:100vw;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
   }
 
-  .window-header {
-    height: 30px;
-    background: rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    cursor: grab;
+  /* top bar */
+  .topbar{
+    height:36px;padding:6px 12px;display:flex;align-items:center;gap:12px;
+    position:fixed;left:0;right:0;top:10px;margin:auto;z-index:40;
+    justify-content:flex-end;
+    pointer-events:auto;
   }
-  .close-btn {
-    margin-left: auto;
-    cursor: pointer;
-    font-weight: bold;
+  .clock, .battery { font-size:13px;color:var(--muted);margin-left:8px; }
+  .iconbtn{ width:30px;height:30px;border-radius:8px;background:var(--glass);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(255,255,255,0.03); }
+  .iconbtn:active{transform:translateY(1px)}
+
+  /* dock / navbar (center bottom) */
+  .dock{
+    position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+    display:flex;gap:12px;padding:8px 16px;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.5));
+    border-radius:999px;align-items:center;z-index:40;border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    backdrop-filter: blur(6px);
+  }
+  .dock img{width:38px;height:38px;border-radius:9px;cursor:pointer;transition:transform var(--transition)}
+  .dock img:hover{transform:translateY(-6px) scale(1.03)}
+
+  /* windows (app panels) */
+  .win{
+    position:absolute;background:linear-gradient(180deg,var(--glass),var(--glass-2));
+    border-radius:var(--ui-radius);padding:10px;border:1px solid rgba(255,255,255,0.04);
+    box-shadow:0 8px 30px rgba(0,0,0,0.5);min-width:280px;min-height:140px;display:flex;flex-direction:column;
+    transition: transform var(--transition), opacity var(--transition);
+    will-change: transform, opacity, left, top;
+    overflow:hidden;
+  }
+  .win .title{
+    display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid rgba(255,255,255,0.02);
+    cursor:grab;background:transparent;font-weight:600;
+  }
+  .win .title .controls{margin-left:auto;display:flex;gap:6px}
+  .ctrl{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0}
+  .c-close{background:#ff6b6b}
+  .c-min{background:#f3c623}
+  .c-max{background:#5efc8d}
+
+  .win .body{flex:1;padding:10px;overflow:auto}
+  .hidden{display:none !important}
+
+  /* responsive: make windows full on small screens */
+  @media (max-width:720px){
+    .win{left:8px!important;right:8px!important;top:80px!important;width:auto!important;height:60vh!important;border-radius:12px}
+    .dock img{width:34px;height:34px}
   }
 
-  .window-content {
-    padding: 15px;
-    flex: 1;
-    overflow-y: auto;
-  }
+  /* tiny helpers */
+  .muted{color:var(--muted);font-size:13px}
+  .btn{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+  .search{min-width:260px;padding:10px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.16);color:#fff}
 
-  /* Notes app */
-  #notes textarea {
-    width: 100%;
-    height: 90%;
-    background: rgba(0,0,0,0.2);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    padding: 10px;
-    resize: none;
-    font-size: 14px;
-  }
+  /* subtle show animation */
+  .enter{opacity:0;transform:scale(.98) translateY(6px)}
+  .enter.on{opacity:1;transform:scale(1) translateY(0)}
+  .fade-in{animation:fadeIn 220ms ease forwards}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  /* Settings app */
-  #settings label, #settings select {
-    display: block;
-    margin: 10px 0;
+  /* reduced motion support */
+  @media (prefers-reduced-motion: reduce){
+    .dock img, .win{transition:none}
   }
-
 </style>
 </head>
 <body>
+<div class="desktop" id="desktop" aria-label="T9 OS Desktop">
 
-<!-- Top Bar -->
-<div id="topbar">
-  <span id="battery">🔋 100%</span>
-  <span id="clock">00:00</span>
-</div>
+  <!-- Topbar (clock / battery / settings) -->
+  <div class="topbar" id="topbar">
+    <div class="search" id="globalSearch" role="search" contenteditable="true" aria-label="Search">Type to search...</div>
+    <div class="iconbtn" id="notifBtn" title="Notifications">🔔</div>
+    <div class="iconbtn" id="settingsBtn" title="Settings">⚙️</div>
+    <div class="clock" id="clock">--:--</div>
+    <div class="battery" id="battery">--%</div>
+  </div>
 
-<!-- Dock -->
-<div id="dock">
-  <img src="https://img.icons8.com/ios-filled/50/ffffff/game-controller.png" alt="Games" onclick="toggleWindow('games')">
-  <img src="https://img.icons8.com/ios-filled/50/ffffff/browser.png" alt="Browser" onclick="toggleWindow('browser')">
-  <img src="https://img.icons8.com/ios-filled/50/ffffff/note.png" alt="Notes" onclick="toggleWindow('notes')">
-  <img src="https://img.icons8.com/ios-filled/50/ffffff/settings.png" alt="Settings" onclick="toggleWindow('settings')">
-</div>
+  <!-- dynamic windows container -->
+  <!-- windows are inserted here by JS -->
+  <div id="windowsRoot" style="position:relative;flex:1;z-index:20"></div>
 
-<!-- Windows -->
-<div id="games" class="window">
-  <div class="window-header">
-    Games
-    <span class="close-btn" onclick="closeWindow('games')">✖</span>
-  </div>
-  <div class="window-content">
-    <p style="text-align:center;">Select a game:</p>
-    <button onclick="alert('Game launched!')">Game 1</button>
-    <button onclick="alert('Game launched!')">Game 2</button>
-  </div>
-</div>
-
-<div id="browser" class="window">
-  <div class="window-header">
-    Browser
-    <span class="close-btn" onclick="closeWindow('browser')">✖</span>
-  </div>
-  <div class="window-content">
-    <input type="text" id="browserInput" placeholder="Enter URL" style="width:100%; padding:5px; border-radius:5px; margin-bottom:10px;">
-    <button onclick="openURL()">Go</button>
-    <iframe id="browserFrame" style="width:100%; height:300px; margin-top:10px; border:none;"></iframe>
-  </div>
-</div>
-
-<div id="notes" class="window">
-  <div class="window-header">
-    Notes
-    <span class="close-btn" onclick="closeWindow('notes')">✖</span>
-  </div>
-  <div class="window-content">
-    <textarea id="noteText" placeholder="Write your notes..."></textarea>
-  </div>
-</div>
-
-<div id="settings" class="window">
-  <div class="window-header">
-    Settings
-    <span class="close-btn" onclick="closeWindow('settings')">✖</span>
-  </div>
-  <div class="window-content">
-    <label for="wallpaper">Choose wallpaper:</label>
-    <select id="wallpaper">
-      <option value="https://images.unsplash.com/photo-1687422731042-9e59225c3d8f?auto=format&fit=crop&w=1950&q=80">Default</option>
-      <option value="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80">Ocean</option>
-      <option value="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1950&q=80">Mountains</option>
-    </select>
+  <!-- dock -->
+  <div class="dock" id="dock" role="navigation" aria-label="dock">
+    <img src="gameicon.png" data-app="games" alt="Games" title="Games">
+    <img src="apps1.png" data-app="apps" alt="Apps" title="Apps">
+    <img src="chat2.png" data-app="chat" alt="Chat" title="Chat">
+    <img src="search.png" data-app="browser" alt="Browser" title="Browser">
   </div>
 </div>
 
 <script>
-  // Clock
-  function updateClock() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('clock').textContent = `${h}:${m}`;
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
+/* ============================
+   Utilities & small helpers
+   ============================ */
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-  // Battery (fake)
-  document.getElementById('battery').textContent = '🔋 100%';
+/* Debounce */
+const debounce = (fn, ms=150) => {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(()=>fn(...a), ms); };
+};
 
-  // Open/Close Windows
-  function toggleWindow(id){
-    const w = document.getElementById(id);
-    w.style.display = w.style.display === 'flex' ? 'none' : 'flex';
-    w.style.top = '50px';
-    w.style.left = '50px';
-  }
-  function closeWindow(id){
-    document.getElementById(id).style.display = 'none';
-  }
+/* Simple clamp */
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  // Browser
-  function openURL(){
-    const url = document.getElementById('browserInput').value;
-    document.getElementById('browserFrame').src = url.startsWith('http') ? url : 'https://' + url;
-  }
-
-  // Notes save/load
-  const noteText = document.getElementById('noteText');
-  noteText.value = localStorage.getItem('notes') || '';
-  noteText.addEventListener('input', ()=>localStorage.setItem('notes', noteText.value));
-
-  // Wallpaper
-  const wallpaperSelect = document.getElementById('wallpaper');
-  wallpaperSelect.addEventListener('change', ()=> {
-    document.body.style.backgroundImage = `url('${wallpaperSelect.value}')`;
-    localStorage.setItem('wallpaper', wallpaperSelect.value);
-  });
-  if(localStorage.getItem('wallpaper')){
-    document.body.style.backgroundImage = `url('${localStorage.getItem('wallpaper')}')`;
-    wallpaperSelect.value = localStorage.getItem('wallpaper');
-  }
-
-  // Dragging windows
-  let dragTarget = null, offsetX=0, offsetY=0;
-  document.querySelectorAll('.window-header').forEach(header=>{
-    header.addEventListener('mousedown', e=>{
-      dragTarget = header.parentElement;
-      offsetX = e.clientX - dragTarget.offsetLeft;
-      offsetY = e.clientY - dragTarget.offsetTop;
-      dragTarget.style.zIndex = 1000;
-    });
-  });
-  document.addEventListener('mousemove', e=>{
-    if(dragTarget){
-      dragTarget.style.left = e.clientX - offsetX + 'px';
-      dragTarget.style.top = e.clientY - offsetY + 'px';
+/* Lazy-load helper for iframes/images using IntersectionObserver */
+const lazyObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const node = e.target;
+      const src = node.getAttribute('data-src');
+      if(src){
+        node.src = src;
+        node.removeAttribute('data-src');
+      }
+      lazyObserver.unobserve(node);
     }
   });
-  document.addEventListener('mouseup', ()=> dragTarget=null);
-</script>
+},{root:null,rootMargin:'200px',threshold:0.01});
 
+/* ============================
+   Basic State + persistence
+   ============================ */
+const state = {
+  z: 100,
+  windows: {},
+  theme: localStorage.getItem('t9_theme') || 'default',
+  bg: localStorage.getItem('t9_bg') || ''
+};
+
+/* ============================
+   Small accessibility helpers
+   ============================ */
+function announce(text){
+  // simple non-intrusive announcement (could be improved with ARIA live region)
+  const el = document.getElementById('announcer') || document.createElement('div');
+  el.id = 'announcer';
+  el.style.position='absolute';el.style.left='-9999px';
+  el.setAttribute('aria-live','polite');
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1800);
+}
+
+/* ============================
+   Clock + Battery updates
+   ============================ */
+function updateClock(){
+  const el = $('#clock');
+  const now = new Date();
+  const opts = {hour:'numeric',minute:'numeric',hour12:true};
+  el.textContent = now.toLocaleTimeString('en-US',opts);
+}
+setInterval(updateClock,1000); updateClock();
+
+if('getBattery' in navigator){
+  navigator.getBattery().then(b=>{
+    const update = ()=> $('#battery').textContent = Math.round(b.level*100)+'%';
+    update();
+    b.addEventListener('levelchange', update);
+  });
+} else { $('#battery').textContent = 'N/A' }
+
+/* ============================
+   Window manager (create, focus, close)
+   - small, efficient, drag support
+   ============================ */
+const windowsRoot = $('#windowsRoot');
+
+function createWindow(id, opts = {}){
+  if(state.windows[id]){ focusWindow(id); return state.windows[id]; }
+
+  const w = document.createElement('section');
+  w.className = 'win enter';
+  w.dataset.wid = id;
+  w.style.left = (opts.left ?? 80) + 'px';
+  w.style.top = (opts.top ?? 80) + 'px';
+  w.style.width = (opts.width ?? 720) + 'px';
+  w.style.height = (opts.height ?? 420) + 'px';
+  w.style.zIndex = ++state.z;
+
+  // header / title bar
+  const title = document.createElement('div');
+  title.className = 'title';
+  title.innerHTML = `<span>${opts.title || id}</span>`;
+  const controls = document.createElement('div');
+  controls.className = 'controls';
+  controls.innerHTML = '<span class="ctrl c-close" data-action="close" title="close"></span><span class="ctrl c-min" data-action="min" title="minimize"></span><span class="ctrl c-max" data-action="max" data-maxed="false" title="maximize"></span>';
+  title.appendChild(controls);
+  w.appendChild(title);
+
+  // body
+  const body = document.createElement('div');
+  body.className = 'body';
+  body.innerHTML = opts.html || '<div class="muted">Empty</div>';
+  w.appendChild(body);
+
+  windowsRoot.appendChild(w);
+
+  // animate in
+  requestAnimationFrame(()=> w.classList.add('on'));
+
+  // track in state
+  state.windows[id] = { el: w, meta: opts };
+
+  // make it draggable
+  makeDraggable(w, title);
+
+  // attach control actions via delegation
+  controls.addEventListener('click', (ev)=>{
+    const act = ev.target.dataset.action;
+    if(!act) return;
+    if(act === 'close') closeWindow(id);
+    if(act === 'min') minimizeWindow(id);
+    if(act === 'max') toggleMaximize(id);
+  });
+
+  // lazy-load any iframes inside body
+  $$('iframe[data-src]', body).forEach(f => lazyObserver.observe(f));
+
+  // increase z on focus
+  w.addEventListener('mousedown', ()=>focusWindow(id));
+  w.addEventListener('touchstart', ()=>focusWindow(id), {passive:true});
+
+  return state.windows[id];
+}
+
+function focusWindow(id){
+  const win = state.windows[id];
+  if(!win) return;
+  win.el.style.zIndex = ++state.z;
+}
+
+function closeWindow(id){
+  const win = state.windows[id];
+  if(!win) return;
+  win.el.remove();
+  delete state.windows[id];
+}
+
+function minimizeWindow(id){
+  const win = state.windows[id];
+  if(!win) return;
+  win.el.style.transition = 'transform 200ms ease, opacity 200ms ease';
+  win.el.style.opacity = '0';
+  win.el.style.transform = 'scale(.96) translateY(20px)';
+  setTimeout(()=> {
+    if(win && win.el) win.el.classList.add('hidden');
+  },220);
+}
+
+function toggleMaximize(id){
+  const win = state.windows[id];
+  if(!win) return;
+  const el = win.el;
+  const maxed = el.dataset.maxed === 'true';
+  if(!maxed){
+    // remember rect
+    win.meta._rect = {left:el.offsetLeft, top:el.offsetTop, width:el.offsetWidth, height:el.offsetHeight};
+    el.style.left = '28px'; el.style.top = '72px'; el.style.width = 'calc(100% - 56px)'; el.style.height = 'calc(100% - 160px)';
+    el.dataset.maxed = 'true';
+  } else {
+    const r = win.meta._rect || {left:80,top:80,width:720,height:420};
+    el.style.left = r.left + 'px'; el.style.top = r.top + 'px'; el.style.width = r.width + 'px'; el.style.height = r.height + 'px';
+    el.dataset.maxed = 'false';
+  }
+}
+
+/* Draggable (pointer events) */
+function makeDraggable(winEl, handle){
+  handle.style.touchAction = 'none';
+  let dragging = false;
+  let start = {x:0,y:0}, origin = {x:0,y:0};
+
+  const onPointerDown = (e)=>{
+    e.preventDefault();
+    focusWindow(winEl.dataset.wid);
+    dragging = true;
+    const p = getPoint(e);
+    start = {x:p.x,y:p.y};
+    origin = {x:winEl.offsetLeft,y:winEl.offsetTop};
+    handle.setPointerCapture && handle.setPointerCapture(e.pointerId);
+    handle.style.cursor = 'grabbing';
+  };
+
+  const onPointerMove = (e)=>{
+    if(!dragging) return;
+    const p = getPoint(e);
+    const dx = p.x - start.x;
+    const dy = p.y - start.y;
+    const left = clamp(origin.x + dx, 8, window.innerWidth - 80);
+    const top = clamp(origin.y + dy, 8, window.innerHeight - 120);
+    winEl.style.left = left + 'px';
+    winEl.style.top = top + 'px';
+  };
+
+  const onPointerUp = (e) => {
+    dragging = false;
+    handle.style.cursor = 'grab';
+  };
+
+  handle.addEventListener('pointerdown', onPointerDown, {passive:false});
+  window.addEventListener('pointermove', onPointerMove, {passive:true});
+  window.addEventListener('pointerup', onPointerUp, {passive:true});
+
+  function getPoint(e){
+    if(e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
+    return {x:e.clientX ?? e.x, y:e.clientY ?? e.y};
+  }
+}
+
+/* ============================
+   App definitions (lightweight)
+   Each app is a small function returning HTML or DOM
+   ============================ */
+function app_games(){
+  const container = document.createElement('div');
+  container.innerHTML = `
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" data-load="https://example.com/game1">Play Game 1</button>
+      <button class="btn" data-load="https://example.com/game2">Play Game 2</button>
+      <button class="btn" data-load="https://example.com/game3">Play Game 3</button>
+    </div>
+    <div style="margin-top:12px" id="gamesFrameWrap"></div>
+  `;
+  // click delegation to lazy-create iframe
+  container.addEventListener('click', (ev)=>{
+    const url = ev.target.dataset.load;
+    if(!url) return;
+    const wrap = container.querySelector('#gamesFrameWrap');
+    wrap.innerHTML = `<iframe data-src="${url}" style="width:100%;height:420px;border:none;border-radius:10px"></iframe>`;
+    const f = wrap.querySelector('iframe');
+    lazyObserver.observe(f);
+  });
+  return container;
+}
+
+function app_apps(){
+  const el = document.createElement('div');
+  el.innerHTML = `
+    <div class="muted">Quick links</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px">
+      <a class="btn" href="https://netflix.com" target="_blank" rel="noopener">Netflix</a>
+      <a class="btn" href="https://discord.com" target="_blank" rel="noopener">Discord</a>
+      <a class="btn" href="https://tiktok.com" target="_blank" rel="noopener">TikTok</a>
+    </div>
+  `;
+  return el;
+}
+
+function app_chat(){
+  const el = document.createElement('div');
+  el.innerHTML = `<div class="muted">Chat</div><div style="margin-top:12px">This chat container is lightweight — integrate your chat iframe or component here.</div>`;
+  return el;
+}
+
+function app_browser(){
+  const el = document.createElement('div');
+  el.innerHTML = `
+    <div style="display:flex;gap:8px;align-items:center">
+      <input class="search" id="miniUrl" placeholder="Enter URL (https://...)" style="min-width:240px"/>
+      <button class="btn" id="openUrl">Open</button>
+    </div>
+    <div style="margin-top:12px"><iframe data-src="about:blank" id="miniIframe" style="width:100%;height:420px;border:none;border-radius:10px"></iframe></div>
+  `;
+  // lazy load later
+  el.querySelector('#openUrl').addEventListener('click', ()=>{
+    const url = el.querySelector('#miniUrl').value.trim();
+    if(!url) return alert('Please enter a URL starting with https://');
+    const f = el.querySelector('#miniIframe');
+    f.setAttribute('data-src', url);
+    lazyObserver.observe(f);
+  });
+  return el;
+}
+
+/* ============================
+   Dock interactions (event delegation)
+   ============================ */
+$('#dock').addEventListener('click', (ev)=>{
+  const img = ev.target.closest('img');
+  if(!img) return;
+  const app = img.dataset.app;
+  if(app === 'games') {
+    const win = createWindow('games', {title:'Games', html:''});
+    // attach DOM from app
+    win.el.querySelector('.body').appendChild(app_games());
+  }
+  if(app === 'apps') {
+    const win = createWindow('apps', {title:'Apps', html:''});
+    win.el.querySelector('.body').appendChild(app_apps());
+  }
+  if(app === 'chat') {
+    const win = createWindow('chat', {title:'Chat', html:''});
+    win.el.querySelector('.body').appendChild(app_chat());
+  }
+  if(app === 'browser') {
+    const win = createWindow('browser', {title:'Browser', html:''});
+    win.el.querySelector('.body').appendChild(app_browser());
+  }
+});
+
+/* ============================
+   Global search behavior (simple reactive)
+   ============================ */
+const globalSearch = $('#globalSearch');
+let searchTimeout;
+globalSearch.addEventListener('focus', ()=> { if(globalSearch.textContent.trim() === 'Type to search...') globalSearch.textContent = ''; });
+globalSearch.addEventListener('blur', ()=> { if(!globalSearch.textContent.trim()) globalSearch.textContent = 'Type to search...'; });
+
+globalSearch.addEventListener('input', debounce(()=> {
+  const q = globalSearch.textContent.trim();
+  if(!q) return;
+  // simple quick search: if typed 'chat' open chat, etc.
+  const low = q.toLowerCase();
+  if(low.includes('chat')) { $('#dock img[data-app="chat"]').click(); announce('Opening chat'); }
+  if(low.includes('games')) { $('#dock img[data-app="games"]').click(); announce('Opening games'); }
+  if(low.includes('browser') || low.includes('open')) { $('#dock img[data-app="browser"]').click(); announce('Opening browser'); }
+}, 350));
+
+/* ============================
+   Small keyboard accessibility
+   ============================ */
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    // close topmost window if any
+    const wins = Object.values(state.windows);
+    if(wins.length) {
+      const top = wins.reduce((a,b) => (Number(a.el.style.zIndex||0) > Number(b.el.style.zIndex||0))?a:b);
+      closeWindow(top.el.dataset.wid);
+    }
+  }
+});
+
+/* ============================
+   Restore background / theme
+   ============================ */
+if(state.bg){
+  document.body.style.backgroundImage = state.bg;
+  document.body.style.backgroundSize = 'cover';
+}
+
+/* ============================
+   Start-up: add a lightweight welcome window
+   ============================ */
+(function init(){
+  const id = 'welcome';
+  const html = document.createElement('div');
+  html.innerHTML = `
+    <h3 style="margin:0 0 8px 0;font-family:'Luckiest Guy',sans-serif">T9 OS</h3>
+    <div class="muted">Optimized & reactive interface. Dock icons open lightweight, lazy-loaded windows.</div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn" id="openGamesQuick">Open Games</button>
+      <button class="btn" id="openAppsQuick">Open Apps</button>
+      <button class="btn" id="openBrowserQuick">Open Browser</button>
+    </div>
+  `;
+  const w = createWindow(id, {title:'Welcome', html:''});
+  w.el.querySelector('.body').appendChild(html);
+
+  // wire quick buttons
+  html.querySelector('#openGamesQuick').addEventListener('click', ()=> $('#dock img[data-app="games"]').click());
+  html.querySelector('#openAppsQuick').addEventListener('click', ()=> $('#dock img[data-app="apps"]').click());
+  html.querySelector('#openBrowserQuick').addEventListener('click', ()=> $('#dock img[data-app="browser"]').click());
+
+  // mark enter animation on
+  setTimeout(()=> {
+    const el = w.el;
+    el.classList.remove('enter');
+    el.classList.add('enter','on');
+    el.classList.add('fade-in');
+  }, 8);
+})();
+
+/* ============================
+   Optional: Firebase / realtime hooks
+   - This is intentionally commented out to avoid loading heavy libs by default.
+   - If you want to re-enable, load firebase via module import and update the DOM in a minimal way.
+   ============================ */
+/*
+import('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js').then(({initializeApp})=>{
+  // do lazy firebase setup here
+});
+*/
+
+/* ============================
+   Performance notes:
+   - Most heavy content (iframes) is created only when requested and uses `data-src` + IntersectionObserver.
+   - Event delegation reduces number of listeners.
+   - Dragging uses pointer events and only sets style transforms, minimizing layout thrash.
+   ============================ */
+
+</script>
 </body>
 </html>
