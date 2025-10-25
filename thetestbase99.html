@@ -620,13 +620,14 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 
 
 
-      <h2 style="    transform: translateX(-50%); top:20px; position:fixed; left:50%; text-align:center; color:white; ">Quotes: <h3 id="quotes"></h3></h2>
+      <h2 style="    transform: translateX(-50%); top:20px; position:fixed; left:50%; text-align:center; color:white; ">Quotes: <span id="quotes"></span></h2>
 
  <script>
         const texts = [
            "Let it grow",
             "bruh",
-            "Gogaurdian is poopoo"
+            "Gogaurdian is poopoo",
+            "67"
         ];
         document.getElementById("quotes").textContent = texts[Math.floor(Math.random() * texts.length)];
     </script>
