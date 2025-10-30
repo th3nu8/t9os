@@ -1267,26 +1267,7 @@ requestAnimationFrame(trackFPS);
 <script>
 const navbar = document.getElementById('navbar');
 
-// Load saved state from localStorage
-window.onload = function() {
-  const state = localStorage.getItem('navbarState');
-  if (state === 'vertical') {
-    applyVertical();
-  } else {
-    applyHorizontal();
-  }
-};
-
-function toggleNavbar() {
-  if (navbar.dataset.orientation === 'vertical') {
-    applyHorizontal();
-    localStorage.setItem('navbarState', 'horizontal');
-  } else {
-    applyVertical();
-    localStorage.setItem('navbarState', 'vertical');
-  }
-}
-
+// Function to apply horizontal style
 function applyHorizontal() {
   navbar.style.bottom = '10px';
   navbar.style.left = '50%';
@@ -1295,10 +1276,10 @@ function applyHorizontal() {
   navbar.style.flexDirection = 'row';
   navbar.style.width = '250px';
   navbar.style.height = '50px';
-  navbar.style.padding = '0';
   navbar.dataset.orientation = 'horizontal';
 }
 
+// Function to apply vertical style
 function applyVertical() {
   navbar.style.top = '50%';
   navbar.style.left = '10px';
@@ -1307,9 +1288,24 @@ function applyVertical() {
   navbar.style.flexDirection = 'column';
   navbar.style.width = '60px';
   navbar.style.height = '220px';
-  navbar.style.padding = '10px 0';
   navbar.dataset.orientation = 'vertical';
 }
+
+// Toggle function
+function toggleNavbar() {
+  if(navbar.dataset.orientation === 'vertical') {
+    applyHorizontal();
+  } else {
+    applyVertical();
+  }
+}
+
+// Initialize default orientation on load
+window.onload = function() {
+  if(!navbar.dataset.orientation) {
+    applyHorizontal();
+  }
+};
 
 </script>
 
