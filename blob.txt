@@ -221,26 +221,6 @@ box-shadow: 2px #141414;
       animation: popIn2 0.5s ease-out forwards;
 
   }
-  #movieDiv {
-    display: none;
-    margin-top: 20px;
-    padding: 10px;
-background-color: #1b1b1bbd;
-border: 1px solid rgb(34, 34, 34);   
-    color: white;
-    inset: 0;
-    margin:auto;
-    position: fixed;
-    z-index: 1000;
-    border-radius:30px; 
-    width:85%;
-    height: 77%; 
-    overflow-x: hidden;
-    overflow-y: auto;
-box-shadow: 2px #141414;
-      animation: popIn2 0.5s ease-out forwards;
-
-  }
     #t9Div {
     display: none;
     margin-top: 20px;
@@ -590,27 +570,24 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 <!-- Navbar -->
 <div id="navbar" class="navbar">
   <a onclick="t9()">
-    <img src="favicon.png">
+    <img src="https://t9oos.netlify.app/favicon.png">
   </a>
   <a id="toggleDivButton">
-    <img src="gameicon.png">
+    <img src="https://t9oos.netlify.app/gameicon.png">
   </a>
    <a onclick="ai()">
-    <img src="ai.png">
-  </a>
-  <a onclick="movie()">
-    <img src="movie2.png">
+    <img src="https://t9oos.netlify.app/ai.png">
   </a>
   <a onclick="s()">
-    <img  src="search.png">
+    <img  src="https://t9oos.netlify.app/search.png">
   </a>
   
   <a onclick="emulator()">
-    <img src="apps1.png">
+    <img src="https://t9oos.netlify.app/apps1.png">
   </a>
 
     <a onclick="Chat()">
-    <img src="chat2.png">
+    <img src="https://t9oos.netlify.app/chat2.png">
   </a>
   
 
@@ -651,17 +628,17 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 
           
      <a href="https://ratgames.vercel.app/">
-     <img class="btn" src="rat.gif">
+     <img class="btn" src="https://t9oos.netlify.app/rat.gif">
           </a>
            <a href="https://blackoutgames.pages.dev/">
-     <img class="btn" src="zenith.png">
+     <img class="btn" src="https://t9oos.netlify.app/zenith.png">
           </a>
            <a href="https://1anime.app">
-     <img class="btn" src="anime-partner.png">
+     <img class="btn" src="https://t9oos.netlify.app/anime-partner.png">
           </a>
         
            <a href="https://ducky-ea0.pages.dev">
-     <img class="btn" src="duckmath.png">
+     <img class="btn" src="https://t9oos.netlify.app/duckmath.png">
           </a>
      
         
@@ -673,8 +650,8 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 <div id="updateDiv">
   <button class="close-btn" onclick="document.getElementById('updateDiv').style.display = 'none';">●</button>
   <h1 class="gtext"> Updates</h1>
-<h1 style="text-align: center;">Version 2.54 </h1>
-        <h3 style="text-align: center; color:white;">New update: added a better prxy other one was slow as a turtle. </h3>
+<h1 style="text-align: center;">Version 2.51 </h1>
+        <h3 style="text-align: center; color:white;">New update: replaced Minecraft/Eaglercraft with a new one which works better. </h3>
                 <h3 style="text-align: center; color:white;">Sorry for not updating in a while im working on new things to T9 OS which will take a while. </h3>
                 <h3 style="text-align: center; color:white;">Links: t9os.vercel.app t9osclass.vercel.app learningbooks.vercel.app. More links in the link docs</h3>
 
@@ -711,7 +688,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 
 
       <h2 style="transform: translateX(-50%); top:20px; position:fixed; left:50%; text-align:center; color:white; ">CPU  usage:   <span id="cpu"></span></h2>
-<img src="memory.png" style="width:30px; bottom:0; position: fixed; transform: translateX(-50%); left:50%;">
+<img src="https://t9oos.netlify.app/memory.png" style="width:30px; bottom:0; position: fixed; transform: translateX(-50%); left:50%;">
  
 <script>
   function updateStats() {
@@ -747,7 +724,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 
 
  
-<iframe class="frame" src="chat2.html"></iframe>
+<iframe class="frame" src="https://t9oos.netlify.app/chat.html"></iframe>
   <style>
     .frame{
       width:100%;
@@ -762,7 +739,8 @@ border: 1px solid rgba(255, 255, 255, 0.15);
     display: none;
     margin-top: 20px;
     padding: 10px;
-     background: rgba(0, 0, 0, 0.822);   
+     background: rgba(0,0,0,0.4);   
+backdrop-filter: blur(7px);   
     color: white;
     inset: 0;
     margin:auto;
@@ -774,7 +752,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
     height: 73%; 
     overflow-x: hidden;
     overflow-y: auto;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.589);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 
       animation: popIn 0.5s ease-out forwards;
 
@@ -791,7 +769,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 
 
  
-<iframe class="frame3" src="terminal.html"></iframe>
+<iframe class="frame3" src="https://t9oos.netlify.app/terminal.html"></iframe>
   <style>
     .frame3{
       width:100%;
@@ -806,46 +784,6 @@ border: 1px solid rgba(255, 255, 255, 0.15);
    
   </style>
  
-           
-</div>
-
-<div id="movieDiv">
-  <button class="close-btn" onclick="document.getElementById('movieDiv').style.display = 'none';">●</button>
-      <button class="full-btn" onclick="fullscreenIframe3()">●</button>
-
-        <h3 style="  left: 50%; color:white; top:-9.5px; position: absolute;   transform: translateX(-50%);" >Movies</h3>
-
-
-
- 
-<iframe id="mframe" class="mframe" src="movie.html"></iframe>
-  <style>
-    .mframe{
-      width:100%;
-      height:95%;
-      bottom:10px;
-      position: absolute;
-      border:none;
-      border-radius:0px 0px 20px 20px;
-      left: 0;
-      bottom: 0;
-    }
-   
-  </style>
-   <script>
-    function fullscreenIframe3() {
-      let iframe = document.getElementById("mframe");
-      if (iframe.requestFullscreen) {
-        iframe.requestFullscreen();
-      } else if (iframe.mozRequestFullScreen) { 
-        iframe.mozRequestFullScreen();
-      } else if (iframe.webkitRequestFullscreen) { 
-        iframe.webkitRequestFullscreen();
-      } else if (iframe.msRequestFullscreen) { 
-        iframe.msRequestFullscreen();
-      }
-    }
-  </script>
            
 </div>
 
@@ -945,7 +883,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
   &nbsp;&nbsp;&nbsp;&nbsp; 
   
   <div class="btn-container">
-    <a onclick="terminal()"><img class="t9btn" src="terminal.png"></a>
+    <a onclick="terminal()"><img class="t9btn" src="https://t9oos.netlify.app/terminal.png"></a>
   </div>
 <script>
   function terminal() {
@@ -1046,7 +984,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
 
   <p class="warn"></p>
 
-  <iframe id="frame3" class="frame" src="https://6f597x-8080.csb.app"></iframe>
+  <iframe id="frame3" class="frame" src="https://test3883443334343.vercel.app"></iframe>
   <style>
     .frame{
       width:100%;
@@ -1155,14 +1093,14 @@ transform: translateX(-50%);
   <button class="close-btn" onclick="document.getElementById('hiddenDiv').style.display = 'none';">●</button>
     <button class="full-btn" onclick="fullscreenIframe()">●</button>
 
-  <button class="back" style="top:10px; left: 50px; position: fixed; color:white;"    onclick="document.getElementById('frame2').src = 'test99.html';">←</button>
+  <button class="back" style="top:10px; left: 50px; position: fixed; color:white;"    onclick="document.getElementById('frame2').src = 'https://t9oos.netlify.app/test99.html';">←</button>
 <h3 style="  left: 50%; color:white; top:-9.5px; position: absolute;   transform: translateX(-50%);      " >Games</h3>
 <h3  id="fpsCounter" style="  left: 80%; color:white; top:-9.5px; position: absolute;   transform: translateX(-80%);      " ></h3>
  
 
 
 
-<iframe id="frame2" src="test99.html"></iframe>
+<iframe id="frame2" src="https://t9oos.netlify.app/test99.html"></iframe>
   <style>
     #frame2{
       width:100%;
@@ -1259,7 +1197,7 @@ requestAnimationFrame(trackFPS);
 
 
 
-<iframe id="frame5" src="/ai/index.html"></iframe>
+<iframe id="frame5" src="https://t9oos.netlify.app//ai/index.html"></iframe>
   <style>
     #frame5{
       width:100%;
@@ -1331,25 +1269,25 @@ backdrop-filter: blur(7px);
    
 
   <a href="https://discord.gg/tknXENDkzY">
-    <img class="timg" src="discord.png">
+    <img class="timg" src="https://t9oos.netlify.app/discord.png">
   </a>  
 
   <a onclick="settings()">
-    <img class="timg" src="settings22.png">
+    <img class="timg" src="https://t9oos.netlify.app/settings22.png">
   </a>
 
   <a href='/'>
-    <img class="timg" src="home.png">
+    <img class="timg" src="https://t9oos.netlify.app/home.png">
   </a>
 
   <a id="fullscreen-button">
-    <img class="timg" src="fullscreen.png">
+    <img class="timg" src="https://t9oos.netlify.app/fullscreen.png">
   </a>
 
 
 
   <a onclick="collab()">
-    <img class="timg" src="collab.png">
+    <img class="timg" src="https://t9oos.netlify.app/collab.png">
   </a>
 
     
@@ -1357,7 +1295,7 @@ backdrop-filter: blur(7px);
 
   
     <a onclick="hacks()">
-    <img class="timg" src="hacks.png">
+    <img class="timg" src="https://t9oos.netlify.app/hacks.png">
   </a>
 
  
@@ -1385,37 +1323,37 @@ backdrop-filter: blur(7px);
   
    <label class="label" for="background-select">Select Background:</label>
 <select id="background-select">
-  <option value="t9os6.png">Default</option>
-                      <option value="abstract.png">T9 Abstract</option>
+  <option value="https://t9oos.netlify.app/t9os6.png">Default</option>
+                      <option value="https://t9oos.netlify.app/abstract.png">T9 Abstract</option>
 
-                  <option value="red.jpg">Red Abstract</option>
-                  <option value="halloween.png">halloween</option>
+                  <option value="https://t9oos.netlify.app/red.jpg">Red Abstract</option>
+                  <option value="https://t9oos.netlify.app/halloween.png">halloween</option>
 
-                  <option value="purplecity2.png">T9 OS city</option>
+                  <option value="https://t9oos.netlify.app/purplecity2.png">T9 OS city</option>
 
-                <option value="toyota.jpg">Toyota GR supra</option>
+                <option value="https://t9oos.netlify.app/toyota.jpg">Toyota GR supra</option>
 
-              <option value="car.jpeg">Hennessey Venom F5 car</option>
+              <option value="https://t9oos.netlify.app/car.jpeg">Hennessey Venom F5 car</option>
 
-            <option value="goku.jpg">Goku</option>
+            <option value="https://t9oos.netlify.app/goku.jpg">Goku</option>
 
-          <option value="ocean.png">Moonlit Voyage</option>
+          <option value="https://t9oos.netlify.app/ocean.png">Moonlit Voyage</option>
 
-          <option value="vibes.gif">Synthwave sunset</option>
+          <option value="https://t9oos.netlify.app/vibes.gif">Synthwave sunset</option>
 
-        <option value="deadpool.gif">Deadpool</option>
+        <option value="https://t9oos.netlify.app/deadpool.gif">Deadpool</option>
 
-  <option value="city.jpg">City</option>
-  <option value="sunset.jpg">Sunset</option>
-  <option value="mountains.jpg">Mountains</option>
-  <option value="tree.jpg">Tropical trees</option>
-  <option value="space.jpg">Space</option>
-    <option value="psky.jpg">Purple sky</option>
+  <option value="https://t9oos.netlify.app/city.jpg">City</option>
+  <option value="https://t9oos.netlify.app/sunset.jpg">Sunset</option>
+  <option value="https://t9oos.netlify.app/mountains.jpg">Mountains</option>
+  <option value="https://t9oos.netlify.app/tree.jpg">Tropical trees</option>
+  <option value="https://t9oos.netlify.app/space.jpg">Space</option>
+    <option value="https://t9oos.netlify.app/psky.jpg">Purple sky</option>
     <option value="abstract.jpg">Abstract</option>
-    <option value="cyberpunk.gif">Cyberpunk</option>
-    <option value="luffy.gif">Luffy Straw hat</option>
-    <option value="tmoon.gif">Samurai Spirit Under the Moon</option>
-      <option value="pbWaves.jpg">Purple Blue Abstract</option>
+    <option value="https://t9oos.netlify.app/cyberpunk.gif">Cyberpunk</option>
+    <option value="https://t9oos.netlify.app/luffy.gif">Luffy Straw hat</option>
+    <option value="https://t9oos.netlify.app/tmoon.gif">Samurai Spirit Under the Moon</option>
+      <option value="https://t9oos.netlify.app/pbWaves.jpg">Purple Blue Abstract</option>
 
 </select>
 
@@ -1472,7 +1410,7 @@ backdrop-filter: blur(7px);
 <script>
   // If no background is saved yet, set default
   if (!localStorage.getItem("bg")) {
-    localStorage.setItem("bg", "url('t9os6.png') no-repeat center center fixed");
+    localStorage.setItem("bg", "url('https://t9oos.netlify.app/t9os6.png') no-repeat center center fixed");
   }
 
   // Always apply the saved background
@@ -1633,12 +1571,6 @@ backdrop-filter: blur(7px);
 <script>
   function settings(){
     const div = document.getElementById('settingsDiv');
-    div.style.display = div.style.display === 'block' ? 'none' : 'block';
-  }
-</script>
-<script>
-  function movie(){
-    const div = document.getElementById('movieDiv');
     div.style.display = div.style.display === 'block' ? 'none' : 'block';
   }
 </script>
@@ -1821,7 +1753,7 @@ if (selectedBackground) {
 <script>
 
   if (!localStorage.getItem("bg")) {
-    localStorage.setItem("bg", "url('abstract.png') no-repeat center center fixed");
+    localStorage.setItem("bg", "url('https://t9oos.netlify.app/abstract.png') no-repeat center center fixed");
   }
 
  
